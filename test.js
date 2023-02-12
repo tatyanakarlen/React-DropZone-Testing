@@ -145,7 +145,8 @@ const img = {
 };
 
 function StyledDropzone(props) {
-  const [files, setFiles] = useState([]);
+//   const [files, setFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState([]);
   const {
     getRootProps,
     getInputProps,
@@ -155,7 +156,7 @@ function StyledDropzone(props) {
     acceptedFiles, 
     open
   } = useDropzone({accept: 'image/*', noClick: true, noKeyboard: true,  onDrop: acceptedFiles => {
-    setFiles(acceptedFiles.map(file => Object.assign(file, {
+    setSelectedFile(acceptedFiles.map(file => Object.assign(file, {
       preview: URL.createObjectURL(file)
     })));
   }});
@@ -171,7 +172,7 @@ function StyledDropzone(props) {
     isDragReject
   ]);
 
-  const thumbs = files.map(file => (
+  const thumbs = selectedFile.map(file => (
     <div style={thumb} key={file.name}>
       <div style={thumbInner}>
         <img
@@ -186,7 +187,7 @@ function StyledDropzone(props) {
 
   useEffect(() => {
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => files.forEach(file => URL.revokeObjectURL(file.preview));
+    return () => selectedFile.forEach(file => URL.revokeObjectURL(file.preview));
   }, []);
 
   const filepath = acceptedFiles.map(file => (
@@ -223,5 +224,3 @@ root.render(
     <StyledDropzone  />
   </React.StrictMode>
 );
-
-
